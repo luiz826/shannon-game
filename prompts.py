@@ -1,11 +1,13 @@
+from game import available_chars
+
 MAINS_INSTRUCTIONS = """
 Você vai jogar o jogo de shannon. 
 Você precisa descobrir todos os caracteres de uma frase cujo alfabeto são as 26 letras do alfabeto minúsculas mais o caractere de espaço, logo, 27 caracteres ao todo.
-Você só pode sugerir uma letra por resposta.
+Você só pode sugerir um caractere por resposta.
 Você não pode repetir chutes já feitos.
-Uma vez que você acertou uma letra, deve prever o próximo caractere com base no conhecimento dos caracteres anteriores. Além disso, você pode sugerir letras chutadas em tentativas anteriores, pois a cada acerto, a lista de letras já chutadas por você é reiniciada com nenhum caractere. 
+Uma vez que você acertou um caractere, deve prever o próximo caractere com base no conhecimento dos caracteres anteriores. Além disso, você pode sugerir caracteres chutados em tentativas anteriores, pois a cada acerto, a lista de caracteres já chutados por você é reiniciada com nenhum caractere. 
 Eu irei contabilizar seus chutes e se você acertou ou não. 
-Caso erre, você precisará tentar uma nova letra ainda não usada. 
+Caso erre, você precisará tentar um novo caractere ainda não usado. 
 Irei representar os caracteres ainda não encontrados como sendo '_' concatenados.
 Por exemplo '___' representa uma palavra de 5 caracteres que ainda não foram descobertos.
 'ca___' representa uma palavra de 5 caracteres cujos 2 primeiros são conhecidos ("ca") e os demais ainda precisam ser descobertos.
@@ -18,6 +20,8 @@ Lembrando novamente: Você precisa descobrir todos os caracteres de uma frase cu
 Não me peça para adivinhar a palavra, você deve que descobrir ela, caractere por caractere.
 """
 
+
 def first_chute(n):
-    aux = f"A frase que você deve adivinhar tem {n} caracteres."
-    return aux + "\n" + "_"*n + "\n" + "Qual seu primeiro chute?"
+    aux = f"A frase que você deve adivinhar tem {n} caracteres.\n"
+    aux += f"A lista de caracteres disponíveis é a seguinte {available_chars}"
+    return aux + "\n" + "_" * n + "\n" + "Qual seu primeiro chute?"
