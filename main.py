@@ -4,7 +4,7 @@ from entropy import *
 from prompts import *
 import re
 import pandas as pd
-
+import time
 
 lista_de_palavras = []
 
@@ -15,7 +15,7 @@ with open("frases.txt", "r") as f:
 
 dict_word_to_guess = []
 
-for sentence in lista_de_palavras[3:5]:
+for sentence in lista_de_palavras[87:]:
     api = API()
     # sentence = lista_de_palavras[i]
 
@@ -28,15 +28,17 @@ for sentence in lista_de_palavras[3:5]:
     
     progress_string = ["_"] * len(sentence)
     try_num = []
-
+    print("FRASE:",sentence)
     for i, s in enumerate(sentence):
-
+        
         guess_num = 0
         is_guess_correct = False
         guesses = []  # letters guessed
         current_available_chars = available_chars.copy()
+        trys = 0
+        interromper = False
         while not is_guess_correct:
-
+            trys += 1
             response = api.get_response()
             print(response)
             if len(response) > 2:
@@ -118,24 +120,32 @@ for sentence in lista_de_palavras[3:5]:
                             aux_prompt += f"Esse caractere {guess} não faz parte dos caracteres disponíveis. Tente outro caractere, por favor!\n"
                     else:
                         aux_prompt += f'Você já tentou esse caracter "{guess}", o próximo caractere não é "{guess}". Tente outro caractere, por favor!\n\n'
-                        aux_prompt += f'O próximo caractere NÃO é "{guess}". VOCÊ NÃO DEVE TENTAR "{guess}" NOVAMENTE.\n\n'
+                        aux_prompt += f'O próximo caractere NÃO é "{guess}". VOCÊ NÃO DEVE TENTAR "{guess}" NOVAMENTE. Tente outro caractere!\n\n'
+                        aux_prompt += f'O próximo caractere NÃO é "{guess}". VOCÊ NÃO DEVE TENTAR "{guess}" NOVAMENTE. Tente outro caractere!\n\n'
                         aux_prompt += (
                             f"Não reponda nenhum dos seguintes caracteres {guesses}\n\n"
                         )
 
             aux_prompt += "\nPor favor, me diga o próximo caractere seguindo o modelo 'Eu vou escolher o caractere \"_\"':\n\nLembrando que"
             aux_prompt += " você só pode sugerir um caractere por resposta (apenas letras ou espaço).\n"
-            aux_prompt += "Lembre da exceção quando você for escolher o caracter espaço, nesse caso você deve responder: 'Eu vou escolher o caractere \"ç\"'\n"
+            aux_prompt += "Lembre da exceção quando você for escolher o caracter \" \", nesse caso você deve responder: 'Eu vou escolher o caractere \"ç\"'\n"
             aux_prompt += f"A lista de caracteres disponíveis é a seguinte {current_available_chars}"
 
             print(aux_prompt)
-
+            # time.sleep(0.1)
             content = [{"role": "user", "content": aux_prompt}]
             api.send_message(content)
 
-    dict_word_to_guess.append((sentence, try_num))
-    with open("resultados.txt", "a") as f:
-        f.write(f"{sentence}: {str(try_num)}" + "\n")
+            if trys > 100:
+                interromper = True
+                break
+        if interromper:
+            break
+
+    if not interromper:
+        dict_word_to_guess.append((sentence, try_num))
+        with open("resultados.txt", "a") as f:
+            f.write(f"{sentence}: {str(try_num)}" + "\n")
 
 
 # save table
