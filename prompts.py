@@ -18,6 +18,12 @@ Muito importante! Você deve jogar o jogo até o final, ou seja, até descobrir 
 Você não pode desistir no meio do jogo. Você não pode responder outra coisa que não seja o caractere que você escolheu para completar o caractere faltante atual da palavra.
 Lembrando novamente: Você precisa descobrir todos os caracteres de uma frase cujo alfabeto são as 26 letras do alfabeto minúsculas mais o caractere de espaço, logo, 27 caracteres ao todo.
 Não me peça para adivinhar a palavra, você deve que descobrir ela, caractere por caractere.
+
+Exemplo de resposta que você sempre deve dar. Repito, você sempre precisa responder nesse modelo:
+
+'Eu vou escolher o caractere "_"'. No qual esse _ representa um dos 27 caracteres possíveis.
+
+Existirá uma exceção quando você for escolher o caracter espaço, nesse caso você deve responder: 'Eu vou escolher o caractere "ç"'.
 """
 
 

@@ -5,10 +5,17 @@ from prompts import *
 import re
 import pandas as pd
 
-lista_de_palavras = ["carro forte"]
+
+lista_de_palavras = []
+
+with open("frases.txt", "r") as f:
+    for line in f:
+        lista_de_palavras.append(line[:-1])
+
+
 dict_word_to_guess = []
 
-for sentence in lista_de_palavras:
+for sentence in lista_de_palavras[3:5]:
     api = API()
     # sentence = lista_de_palavras[i]
 
@@ -49,17 +56,43 @@ for sentence in lista_de_palavras:
                 print("Letra:", guess)
             
             guess = guess.lower()
+            extra_aux = ""
             if guess == "ç":
-                guess = "c"
+                guess = " "
             
+            if guess == "ã" or guess == "á" or guess == "à" or guess == "â" or guess == "ä" or guess == "ã":
+                extra_aux = f"{guess} NÃO É UM CARACTERE VÁLIDO. REPITO, NÃO É UM CARACTERE VÁLIDO. TENTE NOVAMENTE COM UM CARACTERE VÁLIDO.\n"
+                guess = "a"
+            
+            if guess == "é" or guess == "ê" or guess == "è" or guess == "ë" or guess == "ẽ" or guess == "ê":
+                extra_aux = f"{guess} NÃO É UM CARACTERE VÁLIDO. REPITO, NÃO É UM CARACTERE VÁLIDO. TENTE NOVAMENTE COM UM CARACTERE VÁLIDO.\n"
+                guess = "e"
+            
+            if guess == "í" or guess == "î" or guess == "ì" or guess == "ï" or guess == "ĩ" or guess == "î":
+                extra_aux = f"{guess} NÃO É UM CARACTERE VÁLIDO. REPITO, NÃO É UM CARACTERE VÁLIDO. TENTE NOVAMENTE COM UM CARACTERE VÁLIDO.\n"
+                guess = "i"
+
+            if guess == "ó" or guess == "ô" or guess == "ò" or guess == "õ" or guess == "ö" or guess == "ô":
+                extra_aux = f"{guess} NÃO É UM CARACTERE VÁLIDO. REPITO, NÃO É UM CARACTERE VÁLIDO. TENTE NOVAMENTE COM UM CARACTERE VÁLIDO.\n"
+                guess = "o"
+
+            if guess == "ú" or guess == "û" or guess == "ù" or guess == "ü" or guess == "ũ" or guess == "û":
+                extra_aux = f"{guess} NÃO É UM CARACTERE VÁLIDO. REPITO, NÃO É UM CARACTERE VÁLIDO. TENTE NOVAMENTE COM UM CARACTERE VÁLIDO.\n"
+                guess = "u"
+            
+            if len(current_available_chars) == 1:
+                guess = current_available_chars[0]
+                extra_aux = f"Você não tem mais opções de caracteres para escolher. O caractere {guess} é o único disponível.\n"
+
             is_a_valid_guess = check_is_valid_guess(guess)
 
             if not is_a_valid_guess:
-                aux_prompt = "Por favor, um caractere por vez.\n"
+                aux_prompt = extra_aux + "Por favor, um caractere por vez.\n"
             else:
                 aux_prompt = (
                     "Frase a ser adivinhada: " + "".join(progress_string) + "\n"
                 )
+                aux_prompt += extra_aux
                 is_guess_correct = check_guess(guess=guess, correct=s)
 
                 if is_guess_correct:
@@ -77,18 +110,22 @@ for sentence in lista_de_palavras:
                         "Caracteres usados até agora: " + ", ".join(guesses) + "\n"
                     )
                     if guess not in guesses:
-                        guess_num += 1
-                        guesses.append(guess)
-                        current_available_chars.remove(guess)
+                        if guess in current_available_chars:
+                            guess_num += 1
+                            guesses.append(guess)
+                            current_available_chars.remove(guess)
+                        else:
+                            aux_prompt += f"Esse caractere {guess} não faz parte dos caracteres disponíveis. Tente outro caractere, por favor!\n"
                     else:
                         aux_prompt += f'Você já tentou esse caracter "{guess}", o próximo caractere não é "{guess}". Tente outro caractere, por favor!\n\n'
-                        aux_prompt += f'O próximo caractere NÃO é "{guess}\. VOCÊ NÃO DEVE TENTAR "{guess}" NOVAMENTE.\n\n'
+                        aux_prompt += f'O próximo caractere NÃO é "{guess}". VOCÊ NÃO DEVE TENTAR "{guess}" NOVAMENTE.\n\n'
                         aux_prompt += (
                             f"Não reponda nenhum dos seguintes caracteres {guesses}\n\n"
                         )
 
-            aux_prompt += "\nPor favor, me diga o próximo caractere:\n\nLembrando que"
+            aux_prompt += "\nPor favor, me diga o próximo caractere seguindo o modelo 'Eu vou escolher o caractere \"_\"':\n\nLembrando que"
             aux_prompt += " você só pode sugerir um caractere por resposta (apenas letras ou espaço).\n"
+            aux_prompt += "Lembre da exceção quando você for escolher o caracter espaço, nesse caso você deve responder: 'Eu vou escolher o caractere \"ç\"'\n"
             aux_prompt += f"A lista de caracteres disponíveis é a seguinte {current_available_chars}"
 
             print(aux_prompt)
@@ -97,7 +134,20 @@ for sentence in lista_de_palavras:
             api.send_message(content)
 
     dict_word_to_guess.append((sentence, try_num))
+    with open("resultados.txt", "a") as f:
+        f.write(f"{sentence}: {str(try_num)}" + "\n")
+
 
 # save table
-df = pd.DataFrame(columns=["sentence", "tries"], data=dict_word_to_guess)
-df.to_csv("results.csv")
+# df = pd.read_csv("results.csv")
+# df_aux= pd.DataFrame(columns=["sentence", "tries"], data=dict_word_to_guess)
+
+# # concat
+# df = pd.concat([df, df_aux], axis=0)
+# df.drop_duplicates(inplace=True)
+# df.reset_index(drop=True, inplace=True)
+# df.to_csv("results.csv", index=False)
+
+# append results in txt
+
+# df.to_csv("results.csv")
