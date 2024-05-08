@@ -15,9 +15,8 @@ with open("frases.txt", "r") as f:
 
 dict_word_to_guess = []
 
-for sentence in lista_de_palavras[87:]:
+for sentence in lista_de_palavras:
     api = API()
-    # sentence = lista_de_palavras[i]
 
     content = [
         {"role": "system", "content": MAINS_INSTRUCTIONS},

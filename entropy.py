@@ -22,7 +22,6 @@ def calc_upper_bound(table):
 
 
 def calc_lower_bound(table):
-
     len_table = 0
 
     max_guesses = max(table)
@@ -34,15 +33,10 @@ def calc_lower_bound(table):
 
     lower_entropy = 0
 
-    for n in range(1, max_guesses + 1):
-        if n == max_guesses:
-            p_1 = count_probs[n] / len_table
-            lower_entropy += n * (p_1) * np.log2(n)
-            # print(n * (p_1) * np.log2(n))
-        else:
-            p_1 = count_probs[n] / len_table
-            p_2 = count_probs[n + 1] / len_table
-            lower_entropy += n * (p_1 - p_2) * np.log2(n)
-            # print(n * (p_1 - p_2) * np.log2(n))
+    for n in range(1, max_guesses):
+        p_1 = count_probs[n] / len_table
+        p_2 = count_probs[n + 1] / len_table
+        lower_entropy += n * (p_1 - p_2) * np.log2(n)
+        
 
     return lower_entropy

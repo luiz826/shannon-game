@@ -9,7 +9,7 @@ SEED = int(os.getenv("SEED"))
 
 
 class API:
-    def __init__(self, model="gpt-3.5-turbo"):
+    def __init__(self, model="gpt-4"):
         self.client = OpenAI(api_key=KEY)
         self.model = model
 
