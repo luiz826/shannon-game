@@ -30,4 +30,4 @@ Existirá uma exceção quando você for escolher o caracter espaço, nesse caso
 def first_chute(n):
     aux = f"A frase que você deve adivinhar tem {n} caracteres.\n"
     aux += f"A lista de caracteres disponíveis é a seguinte {available_chars}"
-    return aux + "\n" + "_" * n + "\n" + "Qual seu primeiro chute?"
+    return aux + "Por favor, me diga o próximo caractere seguindo o modelo 'Eu vou escolher o caractere \"_\"':\n"
