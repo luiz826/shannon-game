@@ -15,7 +15,7 @@ with open("frases.txt", "r") as f:
 
 dict_word_to_guess = []
 
-for sentence in lista_de_palavras[20:41]:
+for sentence in lista_de_palavras[70:]:
     api = API()
 
     content = [
@@ -42,18 +42,6 @@ for sentence in lista_de_palavras[20:41]:
             response = response.lower()
             print(response)
             if len(response) > 2:
-                # match = re.search(r"(?:escolher|chutar)\s+essa?\s+letra\s+[\'\"]([a-z ])[\'\"]", response)
-                # match2 = re.search(r"\s+[\'\"]([a-z ])[\'\"]", response)
-
-                # if match:
-                #     guess = match.group(1)
-                #     print("Letra:", guess)
-                # if match2:
-                #     guess = match2.group(1)
-                #     print("Letra:", guess)
-                # else:
-                #     guess = response[0]
-                #     print("Letra:", guess)
                 guess = response.split("\"")[1]
                 print("Letra:", guess)
             else:
@@ -152,11 +140,8 @@ for sentence in lista_de_palavras[20:41]:
             aux_prompt += f"A lista de caracteres disponíveis é a seguinte {current_available_chars}"
             aux_prompt += "\nVOCÊ SÓ PODE ESCOLHER CARACTERES QUE ESTEJAM DISPONÍVEL E NÃO DEVE ESCOLHER CARACTERES COM ACENTOS OU CEDILHAS.\n\n"
             print(aux_prompt)
-            # time.sleep(0.1)
             content = [{"role": "user", "content": aux_prompt}]
             api.send_message(content)
-
-            time.sleep(0.1)
 
             if trys > 100:
                 interromper = True
@@ -165,21 +150,5 @@ for sentence in lista_de_palavras[20:41]:
             break
 
     if not interromper:
-        dict_word_to_guess.append((sentence, try_num))
         with open("resultados_novo.txt", "a") as f:
             f.write(f"{sentence}: {str(try_num)}" + "\n")
-
-
-# save table
-# df = pd.read_csv("results.csv")
-# df_aux= pd.DataFrame(columns=["sentence", "tries"], data=dict_word_to_guess)
-
-# # concat
-# df = pd.concat([df, df_aux], axis=0)
-# df.drop_duplicates(inplace=True)
-# df.reset_index(drop=True, inplace=True)
-# df.to_csv("results.csv", index=False)
-
-# append results in txt
-
-# df.to_csv("results.csv")
